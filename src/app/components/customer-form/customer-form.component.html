@@ -1,0 +1,55 @@
+<div class="container-fluid w-50 mt-4">
+  <h2 class="mb-5">{{isUpdateMode? 'Edit Customer' : 'Add Customer'}}</h2>
+
+  <form class="needs-validation" novalidate (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="fullname" class="form-label">Full Name <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="fullname" placeholder="Jane Doe" [(ngModel)]="customer.customerName" name="customerName" required #customerName="ngModel">
+      <div *ngIf="customerName.invalid && (customerName.dirty || customerName.touched)" class="invalid-feedback d-block">
+        Full name field is required
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="address" class="form-label">Address <span class="text-danger">*</span></label>
+      <textarea type="text" class="form-control" id="address" placeholder="Jln. Kihapit Barat Gg. Mekar II, Leuwigajah, Cimahi Selatan" [(ngModel)]="customer.customerAddress" name="customerAddress" required #customerAddress="ngModel"></textarea>
+      <div *ngIf="customerAddress.invalid && (customerAddress.dirty || customerAddress.touched)" class="invalid-feedback d-block">
+        Address field is required
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="phone" class="form-label">Phone Number <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="phone" placeholder="089532..." [(ngModel)]="customer.customerPhone" name="customerPhone" required #customerPhone="ngModel">
+      <div *ngIf="customerPhone.invalid && (customerPhone.dirty || customerPhone.touched)" class="invalid-feedback d-block">
+        Phone number field is required
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="formFile" class="form-label">Photo</label>
+      <input class="form-control" type="file" id="formFile">
+    </div>
+    <div class="mb-3">
+      <label for="status" class="form-label">Status</label>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="status" [(ngModel)]="customer.isActive" name="isActive">
+        <label class="form-check-label" for="status">{{ customer.isActive ? 'Aktif' : 'Tidak Aktif' }}</label>
+      </div>
+    </div>
+
+    <br>
+    <div class="text-center">
+      <button class="btn btn-primary text me-2" type="submit" [disabled]="!isFormValid()">Save</button>
+      <button class="btn btn-danger text" routerLink="/customers">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="showToast" class="position-fixed top-0 end-0 p-3 rounded-3">
+  <div class="align-items-center text-bg-success border-0 rounded-3" role="alert">
+    <div class="d-flex">
+      <div class="toast-body ms-3 me-3 mt-2 mb-2">
+        {{toastMessage}}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="closeToast()"></button>
+    </div>
+  </div>
+</div>

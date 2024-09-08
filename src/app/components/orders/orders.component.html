@@ -1,0 +1,61 @@
+<div class="container mt-4">
+  <h2>Orders Data</h2>
+
+  <div class="d-flex justify-content-end mb-2">
+    <button class="btn btn-primary text me-2" routerLink="/order/add">Add Order</button>
+    <button class="btn btn-primary text"><i class="bi bi-file-earmark-arrow-down-fill me-1"></i>PDF</button>
+  </div>
+
+  <table class="table table-hover table-bordered mt-3 table-responsive-sm">
+    <thead class="table-primary">
+    <tr>
+      <th scope="col">Code</th>
+      <th scope="col">Customer Name</th>
+      <th scope="col">Item Name</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Total Price</th>
+      <th scope="col">Order Date</th>
+      <th scope="col">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngIf="orderList.length == 0">
+      <td colspan="7" class="text-center">Data Is Empty</td>
+    </tr>
+
+    <ng-container *ngIf="orderList.length > 0">
+      <tr *ngFor="let order of orderList">
+        <td>{{order.orderCode}}</td>
+        <td>{{order.customerName}}</td>
+        <td>{{order.itemsName}}</td>
+        <td>{{order.quantity}}</td>
+        <td>{{order.totalPrice}}</td>
+        <td>{{order.orderDate}}</td>
+        <td>
+          <button id="detail" class="btn btn-info btn-sm me-2" routerLink="/order/detail/{{order.orderId}}">
+            <i class="bi bi-eye-fill"></i>
+          </button>
+          <button id="update" class="btn btn-warning btn-sm me-2" routerLink="/order/edit/{{order.orderId}}">
+            <i class="bi bi-pencil-fill"></i>
+          </button>
+          <button id="delete" class="btn btn-danger btn-sm" (click)="deleteItem(order.orderId)">
+            <i class="bi bi-trash-fill"></i>
+          </button>
+        </td>
+      </tr>
+    </ng-container>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="showToast" class="position-fixed top-0 end-0 p-3 rounded-3">
+  <div class="align-items-center text-bg-success border-0 rounded-3" role="alert">
+    <div class="d-flex">
+      <div class="toast-body ms-3 me-3 mt-2 mb-2">
+        {{toastMessage}}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="closeToast()"></button>
+    </div>
+  </div>
+</div>
+

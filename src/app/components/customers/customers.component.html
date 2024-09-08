@@ -1,0 +1,60 @@
+<div class="container mt-4">
+  <h2>Customers Data</h2>
+
+  <div class="d-flex justify-content-end mb-2">
+    <button class="btn btn-primary text me-2" routerLink="/customer/add">Add Customer</button>
+  </div>
+
+  <table class="table table-hover table-bordered mt-3 table-responsive-sm">
+    <thead class="table-primary">
+    <tr>
+      <th scope="col">Code</th>
+      <th scope="col">Name</th>
+      <th scope="col">Address</th>
+      <th scope="col">Phone</th>
+      <th scope="col">Last Order</th>
+      <th scope="col">Status</th>
+      <th scope="col">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="customerList.length == 0">
+        <td colspan="7" class="text-center">Data Is Empty</td>
+      </tr>
+
+      <ng-container *ngIf="customerList.length > 0">
+        <tr *ngFor="let customer of customerList">
+          <td>{{customer.customerCode}}</td>
+          <td>{{customer.customerName}}</td>
+          <td>{{customer.customerAddress}}</td>
+          <td>{{customer.customerPhone}}</td>
+          <td>{{customer.lastOrderDate}}</td>
+          <td>{{customer.isActive? 'Aktif' : 'Tidak Aktif'}}</td>
+          <td>
+            <button id="detail" class="btn btn-info btn-sm me-2" routerLink="/customer/detail/{{customer.customerId}}">
+              <i class="bi bi-eye-fill"></i>
+            </button>
+            <button id="update" class="btn btn-warning btn-sm me-2" routerLink="/customer/edit/{{customer.customerId}}">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+            <button id="delete" class="btn btn-danger btn-sm" (click)="deleteCustomer(customer.customerId)">
+              <i class="bi bi-trash-fill"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="showToast" class="position-fixed top-0 end-0 p-3 rounded-3">
+  <div class="align-items-center text-bg-success border-0 rounded-3" role="alert">
+    <div class="d-flex">
+      <div class="toast-body ms-3 me-3 mt-2 mb-2">
+        {{toastMessage}}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="closeToast()"></button>
+    </div>
+  </div>
+</div>
+

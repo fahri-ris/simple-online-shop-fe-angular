@@ -1,0 +1,44 @@
+<div class="container-fluid w-50 mt-4">
+  <h2 class="mb-5">{{isUpdateMode? 'Edit Item' : 'Add Item'}}</h2>
+
+  <form class="needs-validation" novalidate (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="itemname" class="form-label">Item Name <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="itemname" placeholder="Pensil 2B Fabercastler" [(ngModel)]="item.itemsName" name="itemsName" required #itemsName="ngModel">
+      <div *ngIf="itemsName.invalid && (itemsName.dirty || itemsName.touched)" class="invalid-feedback d-block">
+        Item name field is required
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="price" placeholder="0" [(ngModel)]="item.price" name="price" required #price="ngModel">
+      <div *ngIf="price.invalid && (price.dirty || price.touched)" class="invalid-feedback d-block">
+        Price field is required
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="stock" class="form-label">Stock <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="stock" placeholder="0" [(ngModel)]="item.stock" name="stock" required #stock="ngModel">
+      <div *ngIf="stock.invalid && (stock.dirty || stock.touched)" class="invalid-feedback d-block">
+        Stock field is required
+      </div>
+    </div>
+
+    <br>
+    <div class="text-center">
+      <button class="btn btn-primary text me-2" type="submit" [disabled]="!isFormValid()">Save</button>
+      <button class="btn btn-danger text" routerLink="/items">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="showToast" class="position-fixed top-0 end-0 p-3 rounded-3">
+  <div class="align-items-center text-bg-success border-0 rounded-3" role="alert">
+    <div class="d-flex">
+      <div class="toast-body ms-3 me-3 mt-2 mb-2">
+        {{toastMessage}}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="closeToast()"></button>
+    </div>
+  </div>
+</div>
