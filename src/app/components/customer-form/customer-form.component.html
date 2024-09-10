@@ -24,8 +24,8 @@
       </div>
     </div>
     <div class="mb-3">
-      <label for="formFile" class="form-label">Photo</label>
-      <input class="form-control" type="file" id="formFile">
+      <label for="formFile" class="form-label">Photo <span class="text-danger">*</span></label>
+      <input class="form-control" type="file" id="formFile" (change)="fileSelected($event)" [value]="customer.pic">
     </div>
     <div class="mb-3">
       <label for="status" class="form-label">Status</label>

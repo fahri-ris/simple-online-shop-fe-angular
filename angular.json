@@ -32,7 +32,9 @@
               "src/styles.css"
             ],
             "scripts": [
-              "./node_modules/bootstrap/dist/js/bootstrap.min.js"
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "./node_modules/bootstrap/dist/js/bootstrap.bundle.js",
+              "./node_modules/file-saver/dist/FileSaver.min.js"
             ]
           },
           "configurations": {

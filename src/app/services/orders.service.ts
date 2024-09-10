@@ -3,12 +3,15 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Orders} from "../models/orders.model";
 import {Message} from "../models/message.model";
+import {Lov} from "../models/lov.model";
+import {Reqpdf} from "../models/reqpdf.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrdersService {
   private baseUrl: string =  'http://localhost:5045/api/order';
+  private baseUrlLov: string =  'http://localhost:5045/api/lov';
 
   constructor(
     private http: HttpClient
@@ -32,5 +35,18 @@ export class OrdersService {
 
   deleteOrder(id: number): Observable<Message> {
     return this.http.delete<Message>(`${this.baseUrl}/${id}`);
+  }
+
+  getLovCustomer(): Observable<Lov[]> {
+    return this.http.get<Lov[]>(`${this.baseUrlLov}/customers`);
+  }
+  getLovItem(): Observable<Lov[]> {
+    return this.http.get<Lov[]>(`${this.baseUrlLov}/items`);
+  }
+
+  downloadPdf(reqPdf: Reqpdf): Observable<Blob> {
+    return this.http.post<Blob>(`${this.baseUrl}/download-pdf`, reqPdf, {
+      responseType: 'blob' as 'json'
+    });
   }
 }

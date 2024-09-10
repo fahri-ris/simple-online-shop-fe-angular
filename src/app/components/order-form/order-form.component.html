@@ -1,1 +1,82 @@
-<p>order-form works!</p>
+<div class="container-fluid w-50 mt-4">
+  <h2 class="mb-5">{{isUpdateMode? 'Edit Customer' : 'Add Customer'}}</h2>
+
+  <form class="needs-validation" novalidate (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="lovcustomer" class="form-label">Customer Name <span class="text-danger">*</span></label>
+      <div class="dropdown">
+        <input
+          class="form-control dropdown-toggle"
+          type="text"
+          placeholder="Select an option"
+          [value]="selectedCustomer"
+          [(ngModel)]="order.customerName"
+          #customerName="ngModel"
+          data-bs-toggle="dropdown"
+          readonly
+          (click)="getListCustomer()"
+          id="lovcustomer"
+        />
+        <ul class="dropdown-menu">
+          <li *ngFor="let customer of lovCustomer" (click)="selectCustomer(customer.id, customer.data)">
+            <a class="dropdown-item">{{ customer.data }}</a>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="customerName.invalid && (customerName.dirty || customerName.touched)" class="invalid-feedback d-block">
+        Customer name field is required
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="lovitem" class="form-label">Item Name <span class="text-danger">*</span></label>
+      <div class="dropdown">
+        <input
+          class="form-control dropdown-toggle"
+          type="text"
+          [value]="selectedItem"
+          placeholder="Select an option"
+          [(ngModel)]="order.itemsName"
+          #itemsName="ngModel"
+          data-bs-toggle="dropdown"
+          readonly
+          (click)="getListItem()"
+          id="lovitem"
+        />
+        <ul class="dropdown-menu">
+          <li *ngFor="let item of lovItem" (click)="selectItem(item.id, item.data)">
+            <a class="dropdown-item">{{ item.data }}</a>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="itemsName.invalid && (itemsName.dirty || itemsName.touched)" class="invalid-feedback d-block">
+        Item name field is required
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="quantity" class="form-label">Quantity <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="quantity" placeholder="0" [(ngModel)]="order.quantity" name="customerPhone" required #quantity="ngModel">
+      <div *ngIf="quantity.invalid && (quantity.dirty || quantity.touched)" class="invalid-feedback d-block">
+        Quantity field is required
+      </div>
+    </div>
+
+    <br>
+    <div class="text-center">
+      <button class="btn btn-primary text me-2" type="submit" [disabled]="!isFormValid()">Save</button>
+      <button class="btn btn-danger text" routerLink="/orders">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="showToast" class="position-fixed top-0 end-0 p-3 rounded-3">
+  <div class="align-items-center text-bg-success border-0 rounded-3" role="alert">
+    <div class="d-flex">
+      <div class="toast-body ms-3 me-3 mt-2 mb-2">
+        {{toastMessage}}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="closeToast()"></button>
+    </div>
+  </div>
+</div>

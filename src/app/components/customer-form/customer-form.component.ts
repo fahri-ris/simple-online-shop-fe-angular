@@ -4,6 +4,7 @@ import {Customers} from "../../models/customers.model";
 import {CustomersService} from "../../services/customers.service";
 import {FormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
+import {FileuploadService} from "../../services/fileupload.service";
 
 @Component({
   selector: 'app-customer-form',
@@ -22,14 +23,20 @@ export class CustomerFormComponent {
     customerAddress: '',
     customerPhone: '',
     isActive: false,
-    pic: 'ini gambar'
+    pic: ''
   };
+
+  imageFile: any = {
+    filename: '',
+    url: ''
+  }
+
   formSubmitted = false;
   isUpdateMode = false;
   toastMessage: string | undefined;
   showToast: boolean = false;
 
-  constructor(private customersService: CustomersService, private router: Router, private route: ActivatedRoute) {}
+  constructor(private customersService: CustomersService, private router: Router, private route: ActivatedRoute, private fileUploadService: FileuploadService) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -47,6 +54,22 @@ export class CustomerFormComponent {
 
   goToList(): void {
     this.router.navigate([`/customers`]);
+  }
+
+  fileSelected(event: any){
+    const file: File = event.target.files[0];
+
+    if(file){
+      this.fileUploadService.uploadFile(file).subscribe({
+        next: (data) => {
+          this.imageFile = data;
+          this.customer.pic = this.imageFile.filename;
+        },
+        error: (error) => {
+          console.error(error);
+        }
+      })
+    }
   }
 
   onSubmit(){
