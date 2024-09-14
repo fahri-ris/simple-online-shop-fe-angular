@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Orders} from "../models/orders.model";
 import {Message} from "../models/message.model";
 import {Lov} from "../models/lov.model";
 import {Reqpdf} from "../models/reqpdf.model";
+import {Page} from "../models/page.model";
+import {Items} from "../models/items.model";
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +21,15 @@ export class OrdersService {
 
   getOrders(): Observable<Orders[]> {
     return this.http.get<Orders[]>(this.baseUrl);
+  }
+
+  getOrdersPage(pageIndex: number, pageSize: number, search: string): Observable<Page<Orders[]>> {
+    let params = new HttpParams()
+      .set('pageIndex', pageIndex)
+      .set('pageSize', pageSize)
+      .set('search', search);
+
+    return this.http.get<Page<Orders[]>>(`${this.baseUrl}/pagination`, {params});
   }
 
   getDetailOrder(id: number): Observable<Orders> {

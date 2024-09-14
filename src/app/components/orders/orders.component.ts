@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {ActivatedRoute, Router, RouterModule} from "@angular/router";
 import {Orders} from "../../models/orders.model";
 import {OrdersService} from "../../services/orders.service";
 import {Reqpdf} from "../../models/reqpdf.model";
 import { saveAs } from 'file-saver';
+import {FormsModule} from "@angular/forms";
 
 
 @Component({
@@ -12,7 +13,8 @@ import { saveAs } from 'file-saver';
   standalone: true,
     imports: [
         CommonModule,
-        RouterModule
+        RouterModule,
+        FormsModule
     ],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.css'
@@ -24,21 +26,63 @@ export class OrdersComponent implements OnInit{
   reqPdf: Reqpdf = {
     orderId: []
   };
+  pageIndex: number = 1;
+  pageSize: number = 10;
+  totalPages: number = 0;
+  hasPreviousPage: boolean = false;
+  hasNextPage: boolean = false;
+  search: string = '';
 
   constructor(
     private router: Router,
     private orderService: OrdersService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cd: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
     this.loadOrders()
   }
 
-  loadOrders(){
-    this.orderService.getOrders().subscribe(data => {
-      this.orderList = data;
-    })
+  onSearchChange(event: any){
+    if (this.search.trim() == ''){
+      this.pageIndex = 1;
+      this.loadOrders();
+    }
+  }
+
+  loadOrders(): void {
+    if(this.search !== ''){
+      this.pageIndex = 1;
+    }
+    this.orderService.getOrdersPage(this.pageIndex, this.pageSize, this.search).subscribe(response => {
+      this.orderList = response.data;
+      this.totalPages = response.totalPages;
+      this.hasPreviousPage = response.hasPreviousPage;
+      this.hasNextPage = response.hasNextPage;
+      this.cd.detectChanges();
+    });
+  }
+
+  previousPage(): void {
+    if (this.hasPreviousPage) {
+      this.pageIndex--;
+      this.loadOrders();
+    }
+  }
+
+  nextPage(): void {
+    if (this.hasNextPage) {
+      this.pageIndex++;
+      this.loadOrders();
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page !== this.pageIndex) {
+      this.pageIndex = page;
+      this.loadOrders();
+    }
   }
 
   goToDetail(id: number): void {}

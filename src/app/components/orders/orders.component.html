@@ -1,51 +1,72 @@
 <div class="container mt-4">
   <h2>Orders Data</h2>
 
+  <div class="w-25 d-flex gap-2 mt-3">
+    <input class="form-control" type="text" placeholder="Default input" aria-label="default input example" [(ngModel)]="search" (keyup.enter)="loadOrders()" (input)="onSearchChange($event)">
+    <button class="btn btn-primary text me-2" (click)="loadOrders()">Search</button>
+  </div>
+
   <div class="d-flex justify-content-end mb-2">
     <button class="btn btn-primary text me-2" routerLink="/order/add">Add Order</button>
     <button class="btn btn-primary text" (click)="exportPdf()"><i class="bi bi-file-earmark-arrow-down-fill me-1"></i>PDF</button>
   </div>
 
-  <table class="table table-hover table-bordered mt-3 table-responsive-sm">
-    <thead class="table-primary">
-    <tr>
-      <th scope="col">Code</th>
-      <th scope="col">Customer Name</th>
-      <th scope="col">Item Name</th>
-      <th scope="col">Quantity</th>
-      <th scope="col">Total Price</th>
-      <th scope="col">Order Date</th>
-      <th scope="col">Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngIf="orderList.length == 0">
-      <td colspan="7" class="text-center">Data Is Empty</td>
-    </tr>
-
-    <ng-container *ngIf="orderList.length > 0">
-      <tr *ngFor="let order of orderList">
-        <td>{{order.orderCode}}</td>
-        <td>{{order.customerName}}</td>
-        <td>{{order.itemsName}}</td>
-        <td>{{order.quantity}}</td>
-        <td>{{order.totalPrice}}</td>
-        <td>{{order.orderDate}}</td>
-        <td>
-          <button id="detail" class="btn btn-info btn-sm me-2" routerLink="/order/detail/{{order.orderId}}">
-            <i class="bi bi-eye-fill"></i>
-          </button>
-          <button id="update" class="btn btn-warning btn-sm me-2" routerLink="/order/edit/{{order.orderId}}">
-            <i class="bi bi-pencil-fill"></i>
-          </button>
-          <button id="delete" class="btn btn-danger btn-sm" (click)="deleteItem(order.orderId)">
-            <i class="bi bi-trash-fill"></i>
-          </button>
-        </td>
+  <div class="content-container d-flex flex-column justify-content-between" style="min-height: 72vh;">
+    <table class="table table-hover table-bordered mt-3 table-responsive-sm">
+      <thead class="table-primary">
+      <tr>
+        <th scope="col">Code</th>
+        <th scope="col">Customer Name</th>
+        <th scope="col">Item Name</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Total Price</th>
+        <th scope="col">Order Date</th>
+        <th scope="col">Action</th>
       </tr>
-    </ng-container>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+      <tr *ngIf="orderList.length == 0">
+        <td colspan="7" class="text-center">Data Is Empty</td>
+      </tr>
+
+      <ng-container *ngIf="orderList.length > 0">
+        <tr *ngFor="let order of orderList">
+          <td>{{order.orderCode}}</td>
+          <td>{{order.customerName}}</td>
+          <td>{{order.itemsName}}</td>
+          <td>{{order.quantity}}</td>
+          <td>{{order.totalPrice}}</td>
+          <td>{{order.orderDate}}</td>
+          <td>
+            <button id="detail" class="btn btn-info btn-sm me-2" routerLink="/order/detail/{{order.orderId}}">
+              <i class="bi bi-eye-fill"></i>
+            </button>
+            <button id="update" class="btn btn-warning btn-sm me-2" routerLink="/order/edit/{{order.orderId}}">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+            <button id="delete" class="btn btn-danger btn-sm" (click)="deleteItem(order.orderId)">
+              <i class="bi bi-trash-fill"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-container>
+      </tbody>
+    </table>
+
+    <nav aria-label="..." class="d-flex justify-content-center mt-4">
+      <ul class="pagination">
+        <li class="page-item" [ngClass]="hasPreviousPage? '' : 'disabled'">
+          <a class="page-link" (click)="previousPage()">Prev</a>
+        </li>
+        <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item" [class.active]="i+1 === pageIndex"  aria-current="page">
+          <a class="page-link" (click)="goToPage(i + 1)">{{i + 1}}</a>
+        </li>
+        <li class="page-item" [ngClass]="hasNextPage? '' : 'disabled'">
+          <a class="page-link" (click)="nextPage()">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
 </div>
 
 <div *ngIf="showToast" class="position-fixed top-0 end-0 p-3 rounded-3">

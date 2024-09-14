@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, input, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
@@ -17,24 +17,64 @@ declare var bootstrap: any;
 })
 export class CustomersComponent implements OnInit{
   customerList: Customers[] = [];
-  customer?: Customers;
+  pageIndex: number = 1;
+  pageSize: number = 10;
+  totalPages: number = 0;
+  hasPreviousPage: boolean = false;
+  hasNextPage: boolean = false;
+  search: string = '';
 
   toastLiveExample = document.getElementById('liveToast');
 
   showToast = false;
   toastMessage:string | undefined;
 
-  constructor(private customersService: CustomersService, private router: Router) {}
+  constructor(private customersService: CustomersService, private router: Router, private cd: ChangeDetectorRef) {}
 
   // method
   ngOnInit(): void {
     this.loadCustomers();
   }
 
+  onSearchChange(event: any){
+    if (this.search.trim() == ''){
+      this.pageIndex = 1;
+      this.loadCustomers();
+    }
+  }
+
   loadCustomers(): void {
-    this.customersService.getCustomers().subscribe(data => {
-      this.customerList = data;
+    if(this.search !== ''){
+      this.pageIndex = 1;
+    }
+    this.customersService.getCustomersPage(this.pageIndex, this.pageSize, this.search).subscribe(response => {
+      this.customerList = response.data;
+      this.totalPages = response.totalPages;
+      this.hasPreviousPage = response.hasPreviousPage;
+      this.hasNextPage = response.hasNextPage;
+      this.cd.detectChanges();
     });
+  }
+
+  previousPage(): void {
+    if (this.hasPreviousPage) {
+      this.pageIndex--;
+      this.loadCustomers();
+    }
+  }
+
+  nextPage(): void {
+    if (this.hasNextPage) {
+      this.pageIndex++;
+      this.loadCustomers();
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page !== this.pageIndex) {
+      this.pageIndex = page;
+      this.loadCustomers();
+    }
   }
 
   goToDetail(id: number): void {
@@ -72,4 +112,5 @@ export class CustomersComponent implements OnInit{
     this.showToast = false;
   }
 
+  protected readonly input = input;
 }
